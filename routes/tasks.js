@@ -5,7 +5,7 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const tasks = await Task.find().select("name");
+  const tasks = await Task.find().select("-_id name");
   res.send(tasks);
 });
 
