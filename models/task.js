@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
+const User = require("./user");
 
 const taskSchema = mongoose.Schema({
   name: {
@@ -7,6 +8,10 @@ const taskSchema = mongoose.Schema({
     required: true,
     minlength: 3,
     maxlength: 256,
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
   },
 });
 

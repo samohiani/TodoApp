@@ -4,19 +4,17 @@ const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const tasks = await Task.find().select("-_id name");
-  res.send(tasks);
+router.get("/", auth, async (req, res) => {
+    const tasks = await Task.find({ user: req.user._id }).select(" -_id name");
+    res.send(tasks);
 });
 
 router.post("/", auth, async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
-  let task = new Task({ name: req.body.name });
-  task = await task.save();
-
-  res.send(task);
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+    const task = new Task({name: req.body.name, user: req.user._id});
+    await task.save();
+    res.send(task);
 });
 
 router.put("/id", async (req, res) => {
