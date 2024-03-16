@@ -17,7 +17,7 @@ function validateTask(Task) {
     name: Joi.string().min(3).required(),
   });
 
-  return Schema.validate(task);
+  return Schema.validate(Task);
 }
 
 exports.taskSchema = taskSchema;
