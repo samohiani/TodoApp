@@ -12,6 +12,10 @@ if (!config.get("jwtPrivateKey")) {
 }
 
 app.use(express.json());
+app.use("/", (req, res) => {
+  const message = "Welcome to to your Todo App!";
+  res.send(message);
+});
 app.use("/tasks", tasks);
 app.use("/users", users);
 app.use("/auth", auth);
