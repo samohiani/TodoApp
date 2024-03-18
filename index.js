@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const config = require("config");
+require('dotenv').config();
 const express = require("express");
 const tasks = require("./routes/tasks");
 const users = require("./routes/users");
@@ -21,9 +22,7 @@ app.use("/users", users);
 app.use("/auth", auth);
 
 mongoose
-  .connect(
-    "mongodb+srv://ohianisammy2005:dasakantimuse1@cluster0.u6pdi1b.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-  )
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("Connected to MongoDB..."));
 
 const port = process.env.PORT || 5000;
