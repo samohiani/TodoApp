@@ -1,4 +1,3 @@
-const Joi = require("joi");
 const mongoose = require("mongoose");
 const User = require("./user");
 
@@ -13,18 +12,13 @@ const taskSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  complete: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Task = mongoose.model("Task", taskSchema);
 
-function validateTask(Task) {
-  const Schema = Joi.object({
-    name: Joi.string().min(3).required(),
-  });
-
-  return Schema.validate(Task);
-}
-
 exports.taskSchema = taskSchema;
 exports.Task = Task;
-exports.validate = validateTask;

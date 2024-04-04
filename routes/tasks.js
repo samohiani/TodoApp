@@ -1,53 +1,25 @@
-const { Task, validate } = require("../models/task");
-const auth = require("../middleware/auth");
-const mongoose = require("mongoose");
+const {
+  getAllTasks,
+  createTask,
+  completeTask,
+  completedTasks,
+  updateTask,
+  deleteTask,
+  getTaskById,
+  searchTask,
+  activeTasks,
+} = require("../controller/taskController");
 const express = require("express");
 const router = express.Router();
 
-router.get("/", auth, async (req, res) => {
-    const tasks = await Task.find({ user: req.user._id }).select(" -_id name");
-    res.send(tasks);
-});
-
-router.post("/", auth, async (req, res) => {
-    const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-    const task = new Task({name: req.body.name, user: req.user._id});
-    await task.save();
-    res.send(task);
-});
-
-router.put("/id", async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
-  const task = await Task.findbyIdandUpdate(
-    req.params.id,
-    { name: req.body.name },
-    {
-      new: true,
-    }
-  );
-
-  if (!task) return res.status(404).send("The task was not found.");
-
-  res.send(task);
-});
-
-router.delete("/id", async (req, res) => {
-  const task = await Task.findByIdandDelete(req.params.id);
-
-  if (!task) return res.status(404).send("The task was not found.");
-
-  res.send(task);
-});
-
-router.get("/:id", async (req, res) => {
-  const task = await Task.findById(req.params.id);
-
-  if (!task) return res.status(404).send("The task was not found.");
-
-  res.send(task);
-});
+router.route("/search").get(searchTask);
+router.route("/:taskId/complete").put(completeTask);
+router.route("/completed").get(completedTasks);
+router.route("/active").get(activeTasks);
+router.route("/").post(createTask);
+router.route("/put/:id").put(updateTask);
+router.route("/delete/:id").delete(deleteTask);
+router.route("/getOne/:id").get(getTaskById);
+router.route("/").get(getAllTasks);
 
 module.exports = router;

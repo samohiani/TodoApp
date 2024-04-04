@@ -1,24 +1,24 @@
 const mongoose = require("mongoose");
-require('dotenv').config();
+require("dotenv").config();
 const express = require("express");
 const tasks = require("./routes/tasks");
 const users = require("./routes/users");
 const auth = require("./routes/auth");
 const app = express();
-
+const cors = require("cors");
 if (!process.env.jwtPrivateKey) {
   console.log("FATAL ERROR: jwtPrivateKey is not defined.");
   process.exit(1);
 }
-
+app.use(cors());
 app.use(express.json());
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   const message = "Welcome to to your Todo App!";
-  res.send(message);
+  res.json(message);
 });
-app.use("/tasks", tasks);
-app.use("/users", users);
-app.use("/auth", auth);
+app.use("/api/tasks", tasks);
+app.use("/api/users", users);
+app.use("/api/auth", auth);
 
 mongoose
   .connect(process.env.MONGODB_URI)
